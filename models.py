@@ -115,7 +115,7 @@ For 1-hidden-layer MLP (MLP)
 """
 class MLP(nn.Module):
     """1-hidden-layer MLP for regression."""
-    def __init__(self, d_in: int, d_hidden: int = 128, d_out: int = 1, lr: float = 1e-3, batch_size: int = 128, num_epochs: int = 500, activation: str = "relu", device: str = None, random_state: int = 0):
+    def __init__(self, d_in: int, d_hidden: int = 128, d_out: int = 1, lr: float = 1e-3, batch_size: int = 128, num_epochs: int = 500, activation: str = "relu", device: str = "cpu", random_state: int = 0):
         """
         Potential hyper-parameters you can consider (feel free to add more):
             d_hidden: hidden dimension
@@ -125,8 +125,9 @@ class MLP(nn.Module):
             num_epochs: number of passes over the training data
         """
         super().__init__()
-        # DO NOT forget this -- GPU will make NN training much faster if you have access to one
-        self.device = device or ('mps' if torch.backends.mps.is_available() else 'cpu')
+        # CPU by default, so that the results do not depend on whether a GPU is available
+        # (GPU and CPU round slightly differently; the CPU is not slower for a network this small)
+        self.device = device
         self.lr = lr
         self.batch_size = batch_size
         self.num_epochs = num_epochs

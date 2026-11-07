@@ -33,11 +33,11 @@ pip install -r requirements.txt
 jupyter nbconvert --to notebook --execute --inplace --ExecutePreprocessor.timeout=-1 hw2_Friedrich_Erik.ipynb
 ```
 
-All paths are relative to the repository root, so the command must be run from there. A run takes about 6 minutes on an Apple Silicon Mac with GPU (`mps`) and about 5 minutes on CPU only. The code uses the Mac GPU if available and falls back to the CPU otherwise; no other setup is needed.
+All paths are relative to the repository root, so the command must be run from there. A run takes about 5–6 minutes on a laptop CPU. No GPU is needed or used.
 
 Running the notebook also rewrites the two prediction CSVs and three plots (`train_surface.png`, `rks_surface.png`, `mlp_surface.png`).
 
-**Reproducibility:** all random seeds are fixed. On the same machine, a run reproduces the committed outputs exactly. On different hardware (e.g. CPU instead of the Mac GPU), the neural-network results in Problems 1 and 3 can differ slightly, since floating-point computations are not bit-identical across devices. The Random Kitchen Sinks and all non-neural-network results are deterministic. For example, a CPU-only run gives a Problem 1 MLP test MSE of 13.97 instead of 13.77, and selects batch size 60 instead of 80 in Problem 3(c), with the same validation MSE (0.0382); the conclusions are unchanged.
+**Reproducibility:** all random seeds are fixed, and all models run on the CPU with a single thread (`torch.set_num_threads(1)` and `threadpool_limits(1)` in the setup cell). GPUs, and CPUs with a different number of threads, round floating-point sums slightly differently, and for the neural networks these small differences grow during training into visibly different results. With this setup, a run reproduces the committed outputs exactly, independent of whether the machine has a GPU and how many cores it has. This was tested on an Apple Silicon Mac, both in a fresh environment installed from `requirements.txt` and with different thread settings. A different CPU architecture (e.g. x86 instead of ARM) may still round slightly differently. There, the neural-network results in Problems 1–3 could still differ somewhat from the committed outputs; everything else is unaffected.
 
 ## Exporting to PDF
 
