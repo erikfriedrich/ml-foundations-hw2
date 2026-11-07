@@ -1,0 +1,31 @@
+((=- Default nbconvert LaTeX template, plus:
+     - no section numbering
+     - fixes for tables from newer pandoc versions and for sigma in code cells
+     - cells with metadata "indent": n are indented n levels (sub-parts (a), (i), ...) -=))
+((*- extends 'latex/index.tex.j2' -*))
+
+((* block packages *))
+((( super() )))
+\setcounter{secnumdepth}{0}
+% newer pandoc versions write \def\LTcaptype{none} for tables, which needs this counter
+\newcounter{none}
+% sigma in code cells: the monospace font has no Greek glyphs
+\begingroup\catcode`\σ=\active\gdefσ{\ensuremath{\sigma}}\endgroup
+\AtBeginDocument{\catcode`\σ=\active}
+\newenvironment{indentblock}[1]
+  {\begin{list}{}{\setlength{\leftmargin}{#1}\setlength{\rightmargin}{0pt}%
+    \setlength{\topsep}{0pt}\setlength{\partopsep}{0pt}%
+    \setlength{\itemsep}{0pt}\setlength{\parsep}{\parskip}}\item\relax}
+  {\end{list}}
+((* endblock packages *))
+
+((* block any_cell scoped *))
+((*- set ind = cell.metadata.get('indent', 0) -*))
+((*- if ind > 0 *))
+\begin{indentblock}{((( ind * 1.5 )))em}
+((( super() )))
+\end{indentblock}
+((*- else *))
+((( super() )))
+((*- endif *))
+((* endblock any_cell *))

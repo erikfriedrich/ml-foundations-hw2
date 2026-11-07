@@ -1,0 +1,12 @@
+# tested with Python 3.10
+numpy==1.24.3
+pandas==2.1.4
+pyarrow==25.0.1
+scipy==1.10.1
+scikit-learn==1.7.2
+category_encoders==2.8.1
+matplotlib==3.7.1
+torch==2.14.1
+# to run the notebook from the command line
+nbconvert==7.16.6
+ipykernel==6.19.2
